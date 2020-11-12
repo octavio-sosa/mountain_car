@@ -12,8 +12,13 @@ def main():
     # init q-value constants
     LEARNING_RATE = 0.1
     DISCOUNT = 0.95
+
     EPOCHS = 50_000
     PERIOD = 2_500
+
+    epsilon = 0.5
+    EPOCH_END_DECAY = EPOCHS//2
+    EPSILON_DECAY = epsilon/EPOCH_END_DECAY
 
     # init observation space (discrete)
     observ_bin_n = 20
@@ -40,7 +45,11 @@ def main():
             if period_new:
                 env.render()
 
-            action = np.argmax(q_table[state_current_i])
+            if np.random.random() > epsilon:
+                action = np.argmax(q_table[state_current_i])
+            else:
+                action = np.random.randint(0, env.action_space.n)
+
             state_new, reward, done, _ = env.step(action)
             state_new_i = get_state_index(state_new, env.observation_space.low, observ_bin_size)
 
@@ -58,6 +67,9 @@ def main():
                 
             state_current_i = state_new_i
             steps += 1
+
+        if epoch <= EPOCH_END_DECAY:
+            epsilon -= EPSILON_DECAY
         
     print('')
     env.close()
