@@ -13,8 +13,8 @@ def main():
                                  len_observation_space=len(env.observation_space.high),
                                  num_actions=env.action_space.n,
                                  reward_range=(-1,0))
-    EPOCHS = 25_000
-    PERIOD = 2_500
+    EPOCHS = 2500
+    PERIOD = 250
     epsilon = 0.5
     EPOCH_ZEROING_EPSILON = EPOCHS//4
     EPSILON_DECAY = epsilon/EPOCH_ZEROING_EPSILON
