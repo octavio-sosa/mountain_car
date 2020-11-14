@@ -10,7 +10,7 @@ class plot():
     def update(self, current_epoch, rewards):
         self.rewards.append(rewards)
 
-        if(current_epoch % self.period == 0):
+        if((current_epoch+1) % self.period == 0):
             self.data['epoch'].append(current_epoch)
             self.data['min'].append(min(self.rewards))
             self.data['max'].append(max(self.rewards))
