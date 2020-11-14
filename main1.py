@@ -49,18 +49,12 @@ def main():
             q_agent.update_table(done, new_state[0])
             q_agent.update_state_index('current', new_state)
 
-            '''
-            if new_period and done:
-                print(f'steps: {steps}\n')
-            '''
             total_rewards += q_agent.reward
 
         progress.update(epoch, total_rewards)
 
         if epoch <= EPOCH_ZEROING_EPSILON:
             epsilon -= EPSILON_DECAY
-
-        
 
     env.close()
     progress.show()
