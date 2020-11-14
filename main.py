@@ -14,11 +14,11 @@ def main():
     LEARNING_RATE = 0.1
     DISCOUNT = 0.95
 
-    EPOCHS = 2500
-    PERIOD = 250
+    EPOCHS = 20_000
+    PERIOD = 1000
 
     epsilon = 0.5
-    EPOCH_END_DECAY = EPOCHS//4
+    EPOCH_END_DECAY = EPOCHS//2
     EPSILON_DECAY = epsilon/EPOCH_END_DECAY
 
     # init observation space (discrete)
