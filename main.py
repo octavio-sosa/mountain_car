@@ -63,7 +63,7 @@ def main():
                 #assign max q-value
                 q_table[state_current_i + (action,)] = 0 
                 if period_new:
-                    print('Steps to success:', steps)
+                    print(f'steps: {steps}')
                 
             state_current_i = state_new_i
             steps += 1
