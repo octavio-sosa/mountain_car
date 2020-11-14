@@ -1,5 +1,6 @@
 import gym
 import numpy as np
+from plot.plot import plot
 
 def get_state_index(state, observ_space_low, observ_bin_size):
     index = (state - observ_space_low) / observ_bin_size
@@ -13,8 +14,8 @@ def main():
     LEARNING_RATE = 0.1
     DISCOUNT = 0.95
 
-    EPOCHS = 25_000
-    PERIOD = 2_500
+    EPOCHS = 2500
+    PERIOD = 250
 
     epsilon = 0.5
     EPOCH_END_DECAY = EPOCHS//4
@@ -30,10 +31,12 @@ def main():
     # init q_table 
     q_table_size = observ_size + [env.action_space.n] #all observ combos for each action
     q_table = np.random.uniform(low=-2, high=0, size=q_table_size)
+    
+    progress = plot(EPOCHS, 100)
 
     for epoch in range(EPOCHS):
         if (epoch % PERIOD == 0) or (epoch == EPOCHS-1):
-            print('\nEpoch:', epoch)
+            print('epoch:', epoch)
             period_new = True
         else: 
             period_new = False
@@ -41,9 +44,12 @@ def main():
         state_current_i = get_state_index(env.reset(), env.observation_space.low, observ_bin_size)
         done = False
         steps = 0
+        total_rewards = 0
         while not done:
+            '''
             if period_new:
                 env.render()
+            '''
 
             if np.random.random() > epsilon:
                 action = np.argmax(q_table[state_current_i])
@@ -62,17 +68,23 @@ def main():
             elif done and state_new[0] >= env.goal_position: #reached goal
                 #assign max q-value
                 q_table[state_current_i + (action,)] = 0 
+                '''
                 if period_new:
                     print(f'steps: {steps}')
+                '''
                 
             state_current_i = state_new_i
             steps += 1
+            total_rewards += reward
+
+        progress.update(epoch, total_rewards)
 
         if epoch <= EPOCH_END_DECAY:
             epsilon -= EPSILON_DECAY
         
-    print('')
+    #print('')
     env.close()
+    progress.show()
 
 if __name__ == '__main__':
     main()
