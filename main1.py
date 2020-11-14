@@ -24,20 +24,15 @@ def main():
 
     for epoch in range(EPOCHS):
         if (epoch % PERIOD == 0) or (epoch == EPOCHS-1):
-            new_period = True
             print(f'epoch: {epoch}')
-        else:
-            new_period = False
 
         q_agent.update_state_index('current', env.reset())
 
         done = False
         total_rewards = 0
         while not done:
-            '''
-            if new_period:
+            if epoch > EPOCHS-4:
                 env.render()
-            '''
 
             if np.random.random() > epsilon:
                 q_agent.update_action('table')
