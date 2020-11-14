@@ -1,6 +1,7 @@
 import gym
 import numpy as np
 import q_value.q as q
+from plot.plot import plot
 
 def main():
     env = gym.make("MountainCar-v0")
@@ -19,6 +20,8 @@ def main():
     EPOCH_ZEROING_EPSILON = EPOCHS//4
     EPSILON_DECAY = epsilon/EPOCH_ZEROING_EPSILON
 
+    progress = plot(EPOCHS, 100)
+
     for epoch in range(EPOCHS):
         if (epoch % PERIOD == 0) or (epoch == EPOCHS-1):
             new_period = True
@@ -29,10 +32,12 @@ def main():
         q_agent.update_state_index('current', env.reset())
 
         done = False
-        steps = 0
+        total_rewards = 0
         while not done:
+            '''
             if new_period:
                 env.render()
+            '''
 
             if np.random.random() > epsilon:
                 q_agent.update_action('table')
@@ -43,15 +48,20 @@ def main():
             q_agent.update_state_index('new', new_state)
             q_agent.update_table(done, new_state[0])
             q_agent.update_state_index('current', new_state)
-            steps += 1
 
+            '''
             if new_period and done:
                 print(f'steps: {steps}\n')
+            '''
+            total_rewards += q_agent.reward
+
+        progress.update(epoch, total_rewards)
 
         if epoch <= EPOCH_ZEROING_EPSILON:
             epsilon -= EPSILON_DECAY
 
     env.close()
+    progress.show()
 
 if __name__ == '__main__':
     main()
