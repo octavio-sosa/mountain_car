@@ -22,14 +22,16 @@ class agent:
         self.reward = 0
         self.q_value = 0;
 
-    def update_table(self, done):
-        if done:
-            self.reward = 0 #highest reward
-
+    def update_table(self, done, position):
         future_max_q = np.max(self.table[self.new_state_i])
         self.q_value = self.table[self.current_state_i + (self.action,)]
-        self.q_value += self.LEARNING_RATE*(self.reward + self.DISCOUNT*future_max_q - self.q_value)
-        self.table[self.current_state_i + (self.action,)] = self.q_value
+
+        if done and position >= 0.5: #achieved goal
+            #self.reward = 0 #max reward
+            self.table[self.current_state_i + (self.action,)] = 0
+        else:
+            self.q_value += self.LEARNING_RATE*(self.reward + self.DISCOUNT*future_max_q - self.q_value)
+            self.table[self.current_state_i + (self.action,)] = self.q_value
 
     def update_state_index(self, _type, state):
         index = (state - self.observation_space.low) / self.observation_size

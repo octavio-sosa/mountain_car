@@ -41,7 +41,7 @@ def main():
 
             new_state, q_agent.reward, done, _ = env.step(q_agent.action)
             q_agent.update_state_index('new', new_state)
-            q_agent.update_table(done)
+            q_agent.update_table(done, new_state[0])
             q_agent.update_state_index('current', new_state)
             steps += 1
 
