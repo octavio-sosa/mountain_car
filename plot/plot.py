@@ -21,10 +21,11 @@ class plot():
         plt.plot(self.data['epoch'], self.data['max'], label='max')
         plt.plot(self.data['epoch'], self.data['avg'], label='avg')
         plt.plot(self.data['epoch'], self.data['min'], label='min')
-        plt.legend(loc=4)
+        plt.legend(loc=2)
 
         plt.xlabel('Epoch')
         plt.ylabel('Reward')
         plt.title('Rewards per Epoch')
+        plt.grid(True)
 
         plt.show()
