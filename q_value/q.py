@@ -9,12 +9,14 @@ def make_table(num_val_per_observation, len_observation_space, num_actions, rewa
 
 class agent: 
     def __init__(self, LEARNING_RATE, DISCOUNT,
-                 observation_space, num_val_per_observation):
+                 observation_space, num_val_per_observation,
+                 action_cost):
         self.LEARNING_RATE = LEARNING_RATE
         self.DISCOUNT = DISCOUNT
         self.observation_space = observation_space
         self.observation_size = (self.observation_space.high - self.observation_space.low)\
                                 / num_val_per_observation
+        self.action_cost = action_cost
         self.table = np.zeros(0)
         self.current_state_i = 0
         self.new_state_i = 0
@@ -30,7 +32,8 @@ class agent:
             #self.reward = 0 #max reward
             self.table[self.current_state_i + (self.action,)] = 0
         else:
-            self.q_value += self.LEARNING_RATE*(self.reward + self.DISCOUNT*future_max_q - self.q_value)
+            self.q_value += self.LEARNING_RATE*(self.reward + self.DISCOUNT*future_max_q \
+                                                - self.q_value - self.action_cost)
             self.table[self.current_state_i + (self.action,)] = self.q_value
 
     def update_state_index(self, _type, state):

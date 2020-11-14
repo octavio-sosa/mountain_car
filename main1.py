@@ -9,15 +9,15 @@ def main():
 
     q_agent = q.agent(LEARNING_RATE=0.1, DISCOUNT=0.95,
                       observation_space=env.observation_space,
-                      num_val_per_observation=20) 
+                      num_val_per_observation=20, action_cost=0) 
     q_agent.table = q.make_table(num_val_per_observation=20,
                                  len_observation_space=len(env.observation_space.high),
                                  num_actions=env.action_space.n,
                                  reward_range=(-1,0))
-    EPOCHS = 2500
-    PERIOD = 250
+    EPOCHS = 20_000
+    PERIOD = 1000
     epsilon = 0.5
-    EPOCH_ZEROING_EPSILON = EPOCHS//4
+    EPOCH_ZEROING_EPSILON = EPOCHS//2
     EPSILON_DECAY = epsilon/EPOCH_ZEROING_EPSILON
 
     progress = plot(EPOCHS, 100)
@@ -59,6 +59,8 @@ def main():
 
         if epoch <= EPOCH_ZEROING_EPSILON:
             epsilon -= EPSILON_DECAY
+
+        
 
     env.close()
     progress.show()
